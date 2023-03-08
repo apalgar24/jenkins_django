@@ -63,9 +63,9 @@ pipeline {
                 stage ('SSH') {
                     steps{
                         sshagent(credentials : ['SSH_ADRIAN']) {
-                            sh 'ssh -o StrictHostKeyChecking=no adrian@kratos.senutrio.com sudo docker rmi -f adpalgar24/practica-jenkins'
-                            sh 'ssh -o StrictHostKeyChecking=no adrian@kratos.senutrio.com wget https://raw.githubusercontent.com/apalgar24/jenkins_django/main/docker-compose.yaml -O docker-compose.yaml'
-                            sh 'ssh -o StrictHostKeyChecking=no  adrian@kratos.senutrio.com sudo docker-compose up -d --force-recreate'
+                            sh 'ssh -o StrictHostKeyChecking=no root@kratos.senutrio.com sudo docker rmi -f adpalgar24/practica-jenkins'
+                            sh 'ssh -o StrictHostKeyChecking=no root@kratos.senutrio.com wget https://raw.githubusercontent.com/apalgar24/jenkins_django/main/docker-compose.yaml -O docker-compose.yaml'
+                            sh 'ssh -o StrictHostKeyChecking=no  toot@kratos.senutrio.com sudo docker-compose up -d --force-recreate'
         }
     }
 }
