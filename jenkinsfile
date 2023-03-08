@@ -1,11 +1,11 @@
 pipeline {
     environment {
-        IMAGEN = "adpalgar24/practica_jenkins"
+        IMAGEN = "adpalgar24/practica-jenkins"
         LOGIN = 'USER_DOCKERHUB'
     }
     agent none
     stages {
-        stage("Desarrollo") {
+        stage("Testeos de Django") {
             agent {
                 docker { image "python:3"
                 args '-u root:root'
@@ -14,7 +14,7 @@ pipeline {
             stages {
                 stage('Clone') {
                     steps {
-                        git branch:'master',url:'https://github.com/apalgar24/django_jenkins.git'
+                        git branch:'main',url:'https://github.com/apalgar24/django_jenkins.git'
                     }
                 }
                 stage('Install') {
@@ -31,7 +31,7 @@ pipeline {
 
             }
         }
-        stage("Construccion") {
+        stage("Build y push") {
             agent any
             stages {
                 stage('CloneAnfitrion') {
@@ -60,14 +60,16 @@ pipeline {
                         sh "docker rmi $IMAGEN:latest"
                     }
                 }
+                stage ('SSH') {
+                    steps{
+                        sshagent(credentials : ['SSH_GONZALO']) {
+                            sh 'ssh -o StrictHostKeyChecking=no adrian@kratos.senutrio.com sudo docker rmi -f adpalgar24/practica-jenkins'
+                            sh 'ssh -o StrictHostKeyChecking=no adrian@kratos.senutrio.com wget https://raw.githubusercontent.com/apalgar24/jenkins_django/main/docker-compose.yaml -O docker-compose.yaml'
+                            sh 'ssh -o StrictHostKeyChecking=no  adrian@kratos.senutrio.com sudo docker-compose up -d --force-recreate'
+        }
+    }
+}
             }
         }           
-    }
-    post {
-        always {
-            mail to: 'adrian@debadri',
-            subject: "Status of pipeline: ${currentBuild.fullDisplayName}",
-            body: "${env.BUILD_URL} has result ${currentBuild.result}"
-        }
     }
 }
