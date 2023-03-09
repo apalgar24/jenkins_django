@@ -1,7 +1,7 @@
 FROM python:3
 WORKDIR /usr/src/app
 MAINTAINER Adrian Palomino García
-RUN pip install django mysqlclient && git clone https://github.com/apalgar24/docker_django.git /usr/src/app && mkdir static && apt-get clean && rm -rf /var/lib/apt/lists/*
+RUN pip install django mysqlclient && git clone https://github.com/apalgar24/django_jenkins.git /usr/src/app && mkdir static && apt-get clean && rm -rf /var/lib/apt/lists/*
 #ADD django_polls.sh /usr/src/app
 RUN chmod +x /usr/src/app/django_polls.sh
 ENV ALLOWED_HOSTS=*
